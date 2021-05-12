@@ -42,7 +42,6 @@ check_arg <- function(arg = NULL,
   if(!is.null(chk_dim) && !identical(dim(arg), as.integer(chk_dim))){
     calling_arg_dim_str <- paste(dim(arg), collapse = " ")
     chk_dim_str <- paste0("chk_dim: ", paste(eval(calling_args$chk_dim), collapse = " "))
-    browser()
     message(white("Error from calling function "), green(calling_func_name))
     stop(white("Dimension of "),
          green(calling_arg_str),
