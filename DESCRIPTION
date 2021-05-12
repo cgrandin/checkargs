@@ -1,0 +1,19 @@
+Package: checkargs
+Title: Check Argumnent Types
+Version: 0.0.0.9000
+Authors@R: person("Chris", "Grandin", email = "chris.grandin@gmail.com", role = c("aut", "cre"))
+Description: Checks argument types and dimensions for correctness.
+Depends: R (>= 3.4.0)
+Imports:
+  crayon,
+  dplyr,
+  purrr,
+  rlang,
+  stringr,
+  testthat,
+  tibble
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Config/testthat/edition: 3
