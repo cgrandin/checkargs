@@ -40,8 +40,9 @@ check_arg <- function(arg = NULL,
   }
 
   if(!is.null(chk_dim) && !identical(dim(arg), as.integer(chk_dim))){
-    calling_arg_dim_str <- paste(eval(calling_args$chk_dim), collapse = " ")
-    chk_dim_str <- paste0("chk_dim: ", paste(dim(arg), collapse = " "))
+    calling_arg_dim_str <- paste(dim(arg), collapse = " ")
+    chk_dim_str <- paste0("chk_dim: ", paste(eval(calling_args$chk_dim), collapse = " "))
+    browser()
     message(white("Error from calling function "), green(calling_func_name))
     stop(white("Dimension of "),
          green(calling_arg_str),
@@ -70,28 +71,29 @@ check_arg <- function(arg = NULL,
   }
 
   if(!is.null(chk_class) && !any(class(arg) %in% chk_class)){
-    calling_arg_class_str <- paste(eval(calling_args$chk_class), collapse = " ")
-    chk_class_str <- paste0("chk_class: ", paste(class(arg), collapse = " "))
+    calling_arg_class_str <- paste(class(arg), collapse = " ")
+    chk_class_str <- paste0("chk_class: ", paste(eval(calling_args$chk_class), collapse = " "))
     message(white("Error from calling function "),
             green(calling_func_name))
-    stop(white("Class requirement "),
+    stop(white("Class requirement of "),
+         green(calling_arg_str),
          green(calling_arg_class_str),
-         white(" is not present in class vector of "),
+         white(" is not present in classes "),
          green(chk_class_str),
          call. = FALSE)
   }
 
   if(!is.null(chk_is_in)){
     if(sum(!is.na(match(chk_is_in, arg))) != length(arg)){
-      calling_arg_is_in_str <- paste(eval(calling_args$chk_is_in), collapse = " ")
-      chk_is_in_str <- paste0("chk_is_in: ", paste(arg, collapse = " "))
+      calling_arg_is_in_str <- paste(arg, collapse = " ")
+      chk_is_in_str <- paste0("chk_is_in: ", paste(eval(calling_args$chk_is_in), collapse = " "))
       message(white("Error from calling function "),
               green(calling_func_name, ":"))
       stop(white("Not all values in "),
-           green(chk_is_in_str),
-           white(" are in "),
            green(calling_arg_str),
            green(calling_arg_is_in_str),
+           white(" are in "),
+           green(chk_is_in_str),
            call. = FALSE)
     }
   }
