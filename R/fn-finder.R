@@ -20,7 +20,7 @@ fn_finder <- function(skip_frames = 1,
   })
   prefix[grep(skip_names, prefix)] <- NULL
   prefix <- gsub("function \\(.*", "do.call", prefix)
-  if(length(prefix)==0){
+  if(!length(prefix)){
     stop("Could not find any calling function at stack level ", skip_frames,
          call. = FALSE)
   }else if(ret_stack){

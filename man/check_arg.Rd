@@ -2,9 +2,7 @@
 % Please edit documentation in R/check-args.R
 \name{check_arg}
 \alias{check_arg}
-\title{Verify that the argument \code{arg} is of the correct class, length, and
-Verify that the argument \code{arg} is of the correct class, length, and
-within in a set of values}
+\title{Verify that an object adheres to constraints}
 \usage{
 check_arg(
   arg = NULL,
@@ -18,9 +16,11 @@ check_arg(
 \arguments{
 \item{arg}{The object to check}
 
-\item{chk_class}{A character string of the name of the class to ensure \code{arg} is}
+\item{chk_class}{A vector of character strings of the names of the classes
+to ensure \code{arg} has}
 
-\item{chk_dim}{A vector of the dimensions to ensure \code{arg} is the same dimensions as}
+\item{chk_dim}{A vector of the dimensions that \code{arg} must have as its
+dimensions}
 
 \item{chk_len}{A numeric value to ensure \code{arg} has the length of}
 
@@ -29,13 +29,17 @@ check_arg(
 \item{allow_null}{If \code{TRUE} the argument is allowed to be \code{NULL}}
 }
 \value{
-TRUE, invisibly or the function will throw an error if \code{arg} does not follow
-the constraints given; FALSE is not returned
+TRUE, invisibly or the function will throw an error if \code{arg} does
+not follow the constraints given; \code{FALSE} is not returned
 }
 \description{
-Verify that the argument \code{arg} is of the correct class, length, and
-Verify that the argument \code{arg} is of the correct class, length, and
-within in a set of values
+Verify that the argument \code{arg} is not \code{NULL}, has the correct classes,
+length, dimensions, and is within in a set of values
+}
+\details{
+Any of \code{chk_class}, \code{chk_len}, \code{chk_dim}, and \code{chk_is_in} can be omitted.
+If they are all omitted, only the check to make sure \code{arg} is not \code{NULL}
+will be performed, unless \code{allow_null} is \code{TRUE}
 }
 \examples{
 \dontrun{

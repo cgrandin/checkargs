@@ -11,6 +11,7 @@
 #'   message("You are in ", func_name())
 #' }
 func_name <- function(levels_up = 1){
+
   stopifnot(!is.null(levels_up))
   stopifnot(class(levels_up) == "numeric")
   stopifnot(length(levels_up) == 1)
