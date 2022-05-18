@@ -14,29 +14,39 @@
 #' to ensure `arg` has
 #' @param chk_len A single numeric value to ensure `arg` has the length of. Only
 #' applicable to numeric or integer vectors. Ignored otherwise
-#' @param chk_is_in A vector of values for which `arg` must be equal or larger
-#' than the minimum and equal or less than the maximum
+#' @param chk_is_in A vector of values for which all values in `arg` must be
+#' included in. If `chk_is_in_range` is also specified, an error will be thrown
+#' @param chk_is_in_range A vector of values for which `arg` must be equal or
+#' larger than the minimum and equal or less than the maximum. If
+#' `chk_is_in_range` is also specified, an error will be thrown
 #' @param chk_dim A vector of the dimensions that `arg` must have as its
 #' dimensions
 #' @param allow_null If `TRUE` the argument is allowed to be `NULL`
 #'
-#' @return TRUE, invisibly or the function will throw an error if `arg` does
+#' @return `TRUE`, invisibly or the function will throw an error if `arg` does
 #' not follow the constraints given; `FALSE` is not returned
 #' @importFrom crayon red green white yellow blue
 #' @importFrom purrr map map_chr
+#' @importFrom dplyr %>%
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' check_arg(23, "numeric", 1) # Succeeds
-#' check_arg(23, "numeric", 1, 1:20) # Fails
+#' check_arg(23, "numeric", 1, chk_is_in_range = 1:20) # Fails
 #' }
 check_arg <- function(arg = NULL,
                       chk_class = NULL,
                       chk_dim = NULL,
                       chk_len = NULL,
                       chk_is_in = NULL,
+                      chk_is_in_range = NULL,
                       allow_null = FALSE){
+
+  if(!is.null(chk_is_in) && !is.null(chk_is_in_range)){
+    stop("Both `chk_is_in` and `chk_is_in_range` cannot be specified",
+         call. = FALSE)
+  }
 
   # _nm = name
   # _bt = backticked,
@@ -74,7 +84,7 @@ check_arg <- function(arg = NULL,
 
   if(!is.null(chk_len) && chk_len != length(arg)){
     if(!any(c("data.frame", "list") %in% class(arg))){
-      if(any(c("numeric", "integer") %in% class(arg))){
+      if(any(c( "integer", "logical", "numeric") %in% class(arg))){
         message(white("Length incorrect for argument "), green(arg_bt),
                 white(" in function "), green(func_nm_bt))
         stop(white("Length of "), green(arg_bt), white(" is "),
@@ -103,7 +113,7 @@ check_arg <- function(arg = NULL,
     }
   }
 
-  if(!is.null(chk_is_in)){
+  if(!is.null(chk_is_in) || !is.null(chk_is_in_range)){
     if(any(c("data.frame", "list") %in% class(arg))){
       message(white("Range checking is not implemented for class "),
               white("`data.frame` or `list` for argument "),
@@ -114,26 +124,41 @@ check_arg <- function(arg = NULL,
            call. = FALSE)
     }else{
       # It's a vector
-      if(!any(c("numeric", "integer") %in% class(arg))){
-        message(white("Range checking is not possible for the non-numeric "),
-                white("argument "), green(arg_bt),
-                white(" in function "), green(func_nm_bt))
-        stop("Range checking is not possible for classes other than ",
-             "`numeric` or `integer`",
-             call. = FALSE)
-      }
-      # It's a numeric or integer vector
-      if(!all(arg >= min(chk_is_in) & arg <= max(chk_is_in))){
-        message(white("Constraint problem with argument "), green(arg_bt),
-                white(" in function "), green(func_nm_bt))
-        stop(white("Some of the values in "), green(arg_bt), white(":\n"),
-             red(paste(arg, collapse = ", ")),
-             white("\nare not in the range of allowed values:\n"),
-             green(paste(min(chk_is_in), " .. ", max(chk_is_in))),
-             "\n",
-             call. = FALSE)
+      if(!is.null(chk_is_in)){
+        if(sum(!is.na(match(chk_is_in, arg))) != length(arg)){
+          message(white("Constraint problem with argument "), green(arg_bt),
+                  white(" in function "), green(func_nm_bt))
+          stop(white("Some of the values in "), green(arg_bt), white(":\n"),
+               red(paste(arg, collapse = ", ")),
+               white("\nare not in the range of allowed values:\n"),
+               green(paste(chk_is_in, collapse = ", ")),
+               "\n",
+               call. = FALSE)
+        }
+      }else{
+        # chk_is_in_range is not `NULL`
+        if(!any(c("numeric", "integer") %in% class(arg))){
+          message(white("Range checking is not possible for the non-numeric "),
+                  white("argument "), green(arg_bt),
+                  white(" in function "), green(func_nm_bt))
+          stop("Range checking is not possible for classes other than ",
+               "`numeric` or `integer`",
+               call. = FALSE)
+        }
+        # It's a numeric or integer vector
+        if(!all(arg >= min(chk_is_in_range) & arg <= max(chk_is_in_range))){
+          message(white("Constraint problem with argument "), green(arg_bt),
+                  white(" in function "), green(func_nm_bt))
+          stop(white("Some of the values in "), green(arg_bt), white(":\n"),
+               red(paste(arg, collapse = ", ")),
+               white("\nare not in the range of allowed values:\n"),
+               green(paste(min(chk_is_in_range), " .. ", max(chk_is_in_range))),
+               "\n",
+               call. = FALSE)
+        }
       }
     }
   }
+
   invisible(TRUE)
 }

@@ -2,21 +2,13 @@
 % Please edit documentation in R/get-args.R
 \name{get_args}
 \alias{get_args}
-\title{Get a list of the arguments used within any function call}
+\title{Get a named list of the argument values in any function call}
 \usage{
 get_args()
 }
 \value{
-A list of the argument values used in a function call
+A named list of the argument values used in a function call
 }
 \description{
-Get a list of the arguments used within any function call
-}
-\examples{
-library(checkargs)
-eg <- function(a = 1, b = 2, c = 5){
-  get_args()
-}
-eg()
-eg(10, c = 20)
+Get a named list of the argument values in any function call
 }

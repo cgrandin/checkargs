@@ -10,6 +10,7 @@ check_arg(
   chk_dim = NULL,
   chk_len = NULL,
   chk_is_in = NULL,
+  chk_is_in_range = NULL,
   allow_null = FALSE
 )
 }
@@ -25,13 +26,17 @@ dimensions}
 \item{chk_len}{A single numeric value to ensure \code{arg} has the length of. Only
 applicable to numeric or integer vectors. Ignored otherwise}
 
-\item{chk_is_in}{A vector of values for which \code{arg} must be equal or larger
-than the minimum and equal or less than the maximum}
+\item{chk_is_in}{A vector of values for which all values in \code{arg} must be
+included in. If \code{chk_is_in_range} is also specified, an error will be thrown}
+
+\item{chk_is_in_range}{A vector of values for which \code{arg} must be equal or
+larger than the minimum and equal or less than the maximum. If
+\code{chk_is_in_range} is also specified, an error will be thrown}
 
 \item{allow_null}{If \code{TRUE} the argument is allowed to be \code{NULL}}
 }
 \value{
-TRUE, invisibly or the function will throw an error if \code{arg} does
+\code{TRUE}, invisibly or the function will throw an error if \code{arg} does
 not follow the constraints given; \code{FALSE} is not returned
 }
 \description{
@@ -46,6 +51,6 @@ will be performed, unless \code{allow_null} is \code{TRUE}
 \examples{
 \dontrun{
 check_arg(23, "numeric", 1) # Succeeds
-check_arg(23, "numeric", 1, 1:20) # Fails
+check_arg(23, "numeric", 1, chk_is_in_range = 1:20) # Fails
 }
 }

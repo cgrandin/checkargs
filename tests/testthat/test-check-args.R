@@ -1,3 +1,8 @@
+test_that("Both chk_is_in_range and chk_is_in_range_range are specified throws error", {
+  x <- function(a){check_arg(a, chk_is_in_range = 1:10, chk_is_in_range_range = c(0, 1))}
+  expect_error(x(1))
+})
+
 test_that("Allowance of NULL is handled correctly", {
   j <- function(a){check_arg(a)}
   j2 <- function(a){check_arg(a, allow_null = TRUE)}
@@ -60,10 +65,11 @@ test_that("Length check is handled correctly", {
   expect_error(m1(-1))
   expect_error(m1(1:9))
   expect_error(m1(1:9))
+  expect_true(m1(rep(TRUE, 10)))
 })
 
 test_that("Containment check is handled correctly", {
-  n1 <- function(a){check_arg(a, chk_is_in = 1:100)}
+  n1 <- function(a){check_arg(a, chk_is_in_range = 1:100)}
   expect_true(n1(1))
   expect_true(n1(50))
   expect_true(n1(100))
@@ -78,19 +84,24 @@ test_that("Containment check is handled correctly", {
   expect_error(n1(list(a = 1:10, b = 2:11, d = 3:12)))
 
   n2 <- function(a, tmp, b){
-    check_arg(a, chk_is_in = 1:100)
-    check_arg(tmp, chk_is_in = -10:10)
-    check_arg(b, chk_is_in = 0:5)
+    check_arg(a, chk_is_in_range = 1:100)
+    check_arg(tmp, chk_is_in_range = -10:10)
+    check_arg(b, chk_is_in_range = 0:5)
   }
   expect_error(n2(1, -11, 1))
   expect_error(n2(1, -10, 6))
   expect_error(n2(0, -11, 6))
 
-  n3 <- function(a){check_arg(a, chk_is_in = c(0, 1))}
+  n3 <- function(a){check_arg(a, chk_is_in_range = c(0, 1))}
   expect_true(n3(0))
   expect_true(n3(1))
   expect_true(n3(0.1))
   expect_true(n3(0.9))
   expect_error(n3(1.0001))
   expect_error(n3(-0.0001))
+
+  let <- letters[sample(1:25, 10)] # does not include "z"
+  n4 <- function(a){check_arg(a, chk_is_in = let)}
+  expect_true(n4(c(let[1], let[5], let[10])))
+  expect_error(n4(c(let[1], let[5], "z")))
 })
