@@ -22,9 +22,11 @@ to ensure \code{arg} has}
 \item{chk_dim}{A vector of the dimensions that \code{arg} must have as its
 dimensions}
 
-\item{chk_len}{A numeric value to ensure \code{arg} has the length of}
+\item{chk_len}{A single numeric value to ensure \code{arg} has the length of. Only
+applicable to numeric or integer vectors. Ignored otherwise}
 
-\item{chk_is_in}{A vector of values to ensure \code{arg} is in}
+\item{chk_is_in}{A vector of values for which \code{arg} must be equal or larger
+than the minimum and equal or less than the maximum}
 
 \item{allow_null}{If \code{TRUE} the argument is allowed to be \code{NULL}}
 }

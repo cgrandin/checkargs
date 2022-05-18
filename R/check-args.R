@@ -12,8 +12,10 @@
 #' @param arg The object to check
 #' @param chk_class A vector of character strings of the names of the classes
 #' to ensure `arg` has
-#' @param chk_len A numeric value to ensure `arg` has the length of
-#' @param chk_is_in A vector of values to ensure `arg` is in
+#' @param chk_len A single numeric value to ensure `arg` has the length of. Only
+#' applicable to numeric or integer vectors. Ignored otherwise
+#' @param chk_is_in A vector of values for which `arg` must be equal or larger
+#' than the minimum and equal or less than the maximum
 #' @param chk_dim A vector of the dimensions that `arg` must have as its
 #' dimensions
 #' @param allow_null If `TRUE` the argument is allowed to be `NULL`
@@ -71,11 +73,15 @@ check_arg <- function(arg = NULL,
   }
 
   if(!is.null(chk_len) && chk_len != length(arg)){
-    message(white("Length incorrect for argument "), green(arg_bt),
-            white(" in function "), green(func_nm_bt))
-    stop(white("Length of "), green(arg_bt), white(" is "),
-         red(length(arg)), white(". It should be "), green(chk_len),
-         call. = FALSE)
+    if(!any(c("data.frame", "list") %in% class(arg))){
+      if(any(c("numeric", "integer") %in% class(arg))){
+        message(white("Length incorrect for argument "), green(arg_bt),
+                white(" in function "), green(func_nm_bt))
+        stop(white("Length of "), green(arg_bt), white(" is "),
+             red(length(arg)), white(". It should be "), green(chk_len),
+             call. = FALSE)
+      }
+    }
   }
 
   if(!is.null(chk_class)){
